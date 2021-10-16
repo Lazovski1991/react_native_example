@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, TextInput, Button} from 'react-native';
+import React from 'react';
+import {Button, StyleSheet, TextInput, View} from 'react-native';
 import {Formik} from 'formik';
 import AccessPage from './AccessPage';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {storeToken} from "./Token";
 
 const Auth = ({navigation}) => {
     const url = 'http://localhost:8080/register-user-service/api/auth/login';
@@ -20,37 +20,29 @@ const Auth = ({navigation}) => {
                 })
             })
             .then(response => {
-                return response.json()
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    return response.json()
+                }
             })
             .then(data => {
-                storeToken(data.token)
-                storeRefresh(data.refreshToken)
+                if (data.token !== undefined) {
+                    storeToken("token", data.token);
+                    storeToken("refreshToken", data.refreshToken);
+                } else {
+                    alert(data.message)
+                }
             })
-            .catch((error) => alert(error))
+            .catch((error) => {
+                alert(error)
+            })
     };
 
-    const storeToken = async (value) => {
-        try {
-            console.log(value)
-            await AsyncStorage.setItem('token', value)
-        } catch (e) {
-            // saving error
-        }
-    }
-
-    const storeRefresh = async (value) => {
-        try {
-            console.log(value)
-            await AsyncStorage.setItem('refreshToken', value)
-        } catch (e) {
-            // saving error
-        }
-    }
 
     return (
         <View>
             <Formik initialValues={{login: '', password: ''}} onSubmit={(credentions) => {
-                console.log("success")
                 auth(credentions);
                 navigation.navigate('AccessPage');
             }}>

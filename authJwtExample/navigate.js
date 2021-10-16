@@ -2,8 +2,8 @@ import React from 'react';
 import AccessPage from './components/AccessPage';
 import Auth from './components/Auth';
 
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
@@ -15,7 +15,7 @@ export default function Navigate() {
                 component={Auth}
                 options={{headerShown: false}}
             />
-            <Stack.Screen 
+            <Stack.Screen
                 name="AccessPage"
                 component={AccessPage}
                 options={{headerShown: false}}
